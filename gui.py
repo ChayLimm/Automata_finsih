@@ -125,7 +125,6 @@ def addRow():
         error_label.configure(text="Row maximum 10")
         return
     else:
-
         state = CTkEntry(master=frame, placeholder_text="state..")
         state.grid(row=count, column=0, padx=10, pady=10)
         entries_state1.append(state)
@@ -137,14 +136,25 @@ def addRow():
         symbol = CTkEntry(master=frame, placeholder_text="symbol..")
         symbol.grid(row=count, column=2, padx=10, pady=10)
         entries_symbol.append(symbol)
+
+        # Add the new row of entries to the entries list
+        entries.append([state, tostate, symbol])
+        
         count += 1
 
 def deleteRow():
     global count
     if count > 3:
+        # Remove the last row of entries
         last_row = entries.pop()
         for entry in last_row:
             entry.destroy()
+        
+        # Also remove the entries from the individual lists
+        entries_state1.pop()
+        entries_state2.pop()
+        entries_symbol.pop()
+
         count -= 1
         error_label.configure(text="")
     else:
