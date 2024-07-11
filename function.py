@@ -85,6 +85,7 @@ class FiniteAutomaton:
 
         partition = [self.accepting_states, self.states - self.accepting_states]
         new_partition = []
+
         while True:
             for group in partition:
                 if len(group) == 1:
@@ -94,9 +95,11 @@ class FiniteAutomaton:
                 rep = next(iter(group))
                 same = {rep}
                 diff = set()
+
                 for state in group:
                     if state == rep:
                         continue
+
                     if all(
                         any(
                             (self._get_next_state(rep, symbol) in sub_group) == (self._get_next_state(state, symbol) in sub_group)
@@ -107,9 +110,11 @@ class FiniteAutomaton:
                         same.add(state)
                     else:
                         diff.add(state)
+
                 new_partition.append(same)
                 if diff:
                     new_partition.append(diff)
+
             if partition == new_partition:
                 break
             partition, new_partition = new_partition, []
@@ -124,9 +129,8 @@ class FiniteAutomaton:
             for symbol in self.alphabet:
                 next_state = self._get_next_state(rep, symbol)
                 if next_state:
-                    next_group = next(frozenset(group) for group in partition if next_state in group)
                     new_transitions.append(
-                        (state_mapping[frozenset(group)], state_mapping[next_group], symbol)
+                        (state_mapping[frozenset(group)], state_mapping[frozenset(next(group for group in partition if next_state in group))], symbol)
                     )
 
         return FiniteAutomaton(list(state_mapping.values()), new_transitions, new_start_state, new_accepting_states)

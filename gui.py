@@ -2,6 +2,9 @@ import tkinter
 from customtkinter import CTk, CTkFrame, CTkLabel, CTkEntry, CTkButton
 from function import FiniteAutomaton
 import numpy as np
+from fake_automaton import FakeAutomaton
+import subprocess
+file_name = 'gui.py'
 
 
 # Global variables
@@ -53,8 +56,9 @@ def onClick():
     
     
     fa = FiniteAutomaton(unique_states, transitions, start_state, accepting_states)
+    fake = FakeAutomaton(unique_states, transitions, start_state, accepting_states)
     # Generate FA image
-    fa.generate_fa_image("nfa.png")
+    fake.generate_fa_image("nfa.png")
     # Convert NFA to DFA
     dfa = fa.convert_to_dfa()
     dfa.generate_fa_image("dfa.png")
@@ -162,13 +166,14 @@ def deleteRow():
 
 def resetAll():
     app.destroy()
-    main()
+    subprocess.run(['python3', file_name], check=True)
+
 
 def test_deterministic():
     global fa
 
     if fa.is_deterministic():
-        string_accepted_label.configure(text="Deterministic", text_color="#FAF9F6")
+        string_accepted_label.configure(text="Deterministic", text_color="#2FC92C")
     else:
         string_accepted_label.configure(text="NOT Deterministic", text_color="#424949")
 
